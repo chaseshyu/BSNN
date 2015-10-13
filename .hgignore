@@ -1,2 +1,6 @@
 # System file
 .DS_Store
+
+# Python
+__pycache__/*
+
