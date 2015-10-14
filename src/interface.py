@@ -6,4 +6,4 @@
 
 class get_Image:
 
-    Image_Size = [120,120]
+    __image_ize = [120,120]
