@@ -71,23 +71,6 @@ class Brain:
     def get_CellNum(self):
         return self.__cell_num
 
-    def move_Charge(self,ID):
-        print('============= Charge release from',ID,' =============')
-        over_charg = []
-        cell = self.get_Cell(ID)
-        bonds = cell.get_Bonds()
-        for i in range(cell.get_AxonNum()):
-            bond = bonds[i]
-            targ_cell = self.get_Cell(bond.get_TargID())
-            targ_cell.obtain_Charge(bond.get_Strength())
-            if targ_cell.check_Charge():
-                over_charg.append(bond.get_TargID())
-            print (bond.get_Strength())
-            bond.StrengthenBond()
-            print ('Charge goes to: ',targ_cell.get_Name(),bond.get_Strength())
-        cell.release_Charge()
-        return over_charg
-
 class Cell:
 
     def __init__(self,name,cord):
@@ -166,9 +149,10 @@ class Cell:
     def release_Charge(self):
         self.__charge.set_Inte(self.__charge.get_Inte()-self.__threshold)
         
-    def check_Charge(self):
+    def check_OverCharge(self):
         if self.__charge.get_Inte() >= self.__threshold:
             return True
+
 
 class Bond:
 
@@ -180,10 +164,15 @@ class Bond:
         self.__strength = 1./self.__distance
         self.strekey = 1./self.__distance
 
+    def __iter__(self):
+        return self
+    def __next__(self):
+        return self
+
     def WeakenBond(self):
         self.__strength *= 0.9
     def StrengthenBond(self):
-        self.__strength *= 1.1
+        self.__strength *= 1.05
 
     def get_Start(self):
         return self.__start
@@ -197,7 +186,6 @@ class Bond:
         return self.__distance
     def get_TargID(self):
         return self.__targID
-
 
 
 class Charge:
@@ -219,6 +207,47 @@ class Charge:
 
     def set_Inte(self,inte):
             self.__inte = inte
+
+# phenomenon
+def charg_seperate(cells,targID):
+    print('============= Charge release from',targID,' =============')
+    cell = cells[targID]
+    # conduct charge to bonded cells
+    # get bond info
+    bonds = cell.get_Bonds()
+    targIDs = [bond.get_TargID() for bond in bonds]
+    bonds_stre = [bond.get_Strength() for bond in bonds]
+        
+    for i in range(len(bonds)):
+        if bonds_stre[i] >= 0.8:
+            cells[targIDs[i]].obtain_Charge(bonds_stre[i]**2)
+            bonds[i].StrengthenBond()
+    cell.release_Charge()
+    over_chargIDs = []
+    for i in range(len(bonds)):
+        if cells[targIDs[i]].check_OverCharge():
+            over_chargIDs.append(targIDs[i])
+
+    return over_chargIDs
+
+
+
+#    def move_Charge(self,ID):
+#        print('============= Charge release from',ID,' =============')
+#        over_charg = []
+#        cell = self.get_Cell(ID)
+#        bonds = cell.get_Bonds()
+#        for i in range(cell.get_AxonNum()):
+#           bond = bonds[i]
+#            targ_cell = self.get_Cell(bond.get_TargID())
+#            targ_cell.obtain_Charge(bond.get_Strength())
+#            if targ_cell.check_Charge():
+#                over_charg.append(bond.get_TargID())
+#            print (bond.get_Strength())
+#            bond.StrengthenBond()
+#            print ('Charge goes to: ',targ_cell.get_Name(),bond.get_Strength())
+#        cell.release_Charge()
+#        return over_charg
 
 
 

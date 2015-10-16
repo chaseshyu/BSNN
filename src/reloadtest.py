@@ -13,4 +13,4 @@ class get_Image:
 
 
 def test123():
-    return 5
+    return 'This is reloadtest1'

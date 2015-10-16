@@ -4,3 +4,6 @@
 # Python
 __pycache__/*
 
+# Compile
+src/*.o
+src/*.so
