@@ -4,15 +4,17 @@
 #
 #  Created by Phoenix on 10/13/15.
 #  Copyright © 2015 Zranwind. All rights reserved.
-import matplotlib.pyplot as plt
-from matplotlib import animation
 import numpy as np
-from operator import itemgetter, attrgetter, methodcaller
-from ctypes import cdll
+import time
 
 import interface as inf
 import neural as nr
+import dynamic as dy
 import tools
+### tools
+
+#return a method
+from operator import methodcaller
 
 ### Paramaters ###
 
@@ -84,63 +86,6 @@ def main():
         tools.plot_frame(brain_layer+1)
 
 
-
-
-
-
-
-
-
-from ctypes import cdll
-from _ctypes import dlclose
-import os, time, sys
-
-def so_test():
-
-    # load dynamic-link library.
-    sotest = cdll.LoadLibrary("./so/sointerface.so")
-
-    # execute the function in linked library
-    print (sotest.sum(1,2))
-    
-    # before reload, need to delete the dynamic-link library.
-    dlclose(sotest._handle)
-    # in win32: _ctypes.FreeLibrary(sotest._handle)
-    del sotest
-
-    # update the library
-    os.system('make test2')
-#    time.sleep(1)
-    
-    # reload the updated library.
-    sotest = cdll.LoadLibrary("./so/sointerface.so")
-
-    # execute the function in updated library
-    print (sotest.sum(1,2))
-
-from importlib import reload
-
-def reload_test():
-    
-    # disable automic cache .pyc bytecode of the modules load below.
-    # so that every reload can be updated immediately.
-    sys.dont_write_bytecode = True
-    
-    # load library.
-    import reloadtest
-    
-    # execute the function in linked library
-    print (reloadtest.test123())
-    
-    # update the library
-    os.system('cp reloadtest2.py reloadtest.py')
-    
-    # reload the updated library.
-    reload(reloadtest)
-    print (reloadtest.test123())
-    
-    
-    os.system('cp reloadtest1.py reloadtest.py')
 
 if __name__ == '__main__':
     main()
